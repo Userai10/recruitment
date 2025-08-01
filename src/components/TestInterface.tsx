@@ -104,25 +104,25 @@ const TestInterface: React.FC<TestInterfaceProps> = ({ user, userProfile, onTest
       {/* Header */}
       <header className="relative z-10 bg-black bg-opacity-40 backdrop-blur-xl border-b border-purple-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-xl font-bold text-white">Recruitment Test</h1>
-              <div className="flex items-center space-x-2 text-sm text-gray-300">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 space-y-3 sm:space-y-0">
+            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+              <h1 className="text-lg sm:text-xl font-bold text-white">Recruitment Test</h1>
+              <div className="flex items-center space-x-2 text-xs sm:text-sm text-gray-300">
                 <span>Question {currentQuestionIndex + 1} of {questions.length}</span>
                 <span>•</span>
                 <span>{getAnsweredCount()} answered</span>
               </div>
             </div>
             
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center justify-between sm:justify-end space-x-3 sm:space-x-6 w-full sm:w-auto">
               <div className="flex items-center space-x-2 text-white">
                 <Clock className="w-5 h-5 text-purple-400" />
-                <span className="font-mono text-lg">{formatTime(timeLeft)}</span>
+                <span className="font-mono text-base sm:text-lg">{formatTime(timeLeft)}</span>
               </div>
               <button
                 onClick={handleSubmitTest}
                 disabled={isSubmitting}
-                className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 disabled:opacity-50"
+                className="px-3 sm:px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 disabled:opacity-50 text-sm sm:text-base whitespace-nowrap"
               >
                 {isSubmitting ? 'Submitting...' : 'Submit Test'}
               </button>
@@ -145,30 +145,30 @@ const TestInterface: React.FC<TestInterfaceProps> = ({ user, userProfile, onTest
 
       {/* Main Content */}
       <main className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-8">
+        <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-4 sm:p-6 lg:p-8">
           {/* Question */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <span className="px-3 py-1 bg-purple-600 bg-opacity-30 border border-purple-500/30 rounded-full text-purple-300 text-sm">
+          <div className="mb-6 sm:mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 space-y-2 sm:space-y-0">
+              <span className="px-3 py-1 bg-purple-600 bg-opacity-30 border border-purple-500/30 rounded-full text-purple-300 text-xs sm:text-sm w-fit">
                 {currentQuestion.category}
               </span>
-              <span className="text-gray-400 text-sm">
+              <span className="text-gray-400 text-xs sm:text-sm">
                 Question {currentQuestionIndex + 1}
               </span>
             </div>
             
-            <h2 className="text-2xl font-semibold text-white mb-6 leading-relaxed">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-white mb-4 sm:mb-6 leading-relaxed">
               {currentQuestion.question}
             </h2>
           </div>
 
           {/* Options */}
-          <div className="space-y-4 mb-8">
+          <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
             {currentQuestion.options.map((option, index) => (
               <button
                 key={index}
                 onClick={() => handleAnswerSelect(currentQuestion.id, index)}
-                className={`w-full p-4 text-left rounded-lg border transition-all duration-300 ${
+                className={`w-full p-3 sm:p-4 text-left rounded-lg border transition-all duration-300 ${
                   answers[currentQuestion.id] === index
                     ? 'bg-purple-600 bg-opacity-30 border-purple-500 text-white'
                     : 'bg-gray-800 bg-opacity-50 border-gray-600 text-gray-300 hover:bg-gray-700 hover:border-gray-500'
@@ -184,33 +184,33 @@ const TestInterface: React.FC<TestInterfaceProps> = ({ user, userProfile, onTest
                       <CheckCircle className="w-4 h-4 text-white" />
                     )}
                   </div>
-                  <span className="text-lg">{option}</span>
+                  <span className="text-sm sm:text-base lg:text-lg">{option}</span>
                 </div>
               </button>
             ))}
           </div>
 
           {/* Navigation */}
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
             <button
               onClick={() => setCurrentQuestionIndex(Math.max(0, currentQuestionIndex - 1))}
               disabled={currentQuestionIndex === 0}
-              className="flex items-center space-x-2 px-6 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 rounded-lg text-gray-300 hover:bg-gray-600 hover:border-gray-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-gray-700 bg-opacity-50 border border-gray-600 rounded-lg text-gray-300 hover:bg-gray-600 hover:border-gray-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base w-full sm:w-auto justify-center"
             >
               <ChevronLeft className="w-5 h-5" />
               <span>Previous</span>
             </button>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 order-first sm:order-none">
               {answers[currentQuestion.id] !== undefined ? (
                 <div className="flex items-center space-x-2 text-green-400">
                   <CheckCircle className="w-5 h-5" />
-                  <span className="text-sm">Answered</span>
+                  <span className="text-xs sm:text-sm">Answered</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-2 text-yellow-400">
                   <AlertCircle className="w-5 h-5" />
-                  <span className="text-sm">Not answered</span>
+                  <span className="text-xs sm:text-sm">Not answered</span>
                 </div>
               )}
             </div>
@@ -218,7 +218,7 @@ const TestInterface: React.FC<TestInterfaceProps> = ({ user, userProfile, onTest
             <button
               onClick={() => setCurrentQuestionIndex(Math.min(questions.length - 1, currentQuestionIndex + 1))}
               disabled={currentQuestionIndex === questions.length - 1}
-              className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base w-full sm:w-auto justify-center"
             >
               <span>Next</span>
               <ChevronRight className="w-5 h-5" />
@@ -227,18 +227,18 @@ const TestInterface: React.FC<TestInterfaceProps> = ({ user, userProfile, onTest
         </div>
 
         {/* Question Navigator */}
-        <div className="mt-8 bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-6">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center space-x-2">
+        <div className="mt-6 sm:mt-8 bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-semibold text-white mb-4 flex items-center space-x-2">
             <Flag className="w-5 h-5 text-purple-400" />
             <span>Question Navigator</span>
           </h3>
           
-          <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
+          <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2">
             {questions.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentQuestionIndex(index)}
-                className={`w-10 h-10 rounded-lg border text-sm font-semibold transition-all duration-300 ${
+                className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg border text-xs sm:text-sm font-semibold transition-all duration-300 ${
                   index === currentQuestionIndex
                     ? 'bg-purple-600 border-purple-500 text-white'
                     : answers[questions[index].id] !== undefined

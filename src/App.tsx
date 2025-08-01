@@ -210,32 +210,32 @@ function App() {
 
       {/* Main Card */}
       <div className="relative z-10 w-full max-w-md">
-        <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl shadow-2xl border border-purple-500/20 p-8">
+        <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl shadow-2xl border border-purple-500/20 p-6 sm:p-8 mx-4 sm:mx-0">
           {/* Header */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-6 sm:mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full mb-4">
               <GraduationCap className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
               {isLogin ? 'Welcome Back' : 'Join Our Society'}
             </h1>
-            <p className="text-gray-300 text-sm">
+            <p className="text-gray-300 text-xs sm:text-sm">
               {isLogin ? 'Sign in to your recruitment portal' : 'Create your recruitment account'}
             </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {/* Auth Error Message */}
             {authError && (
-              <div className="bg-red-500 bg-opacity-20 border border-red-500 rounded-lg p-3 text-red-400 text-sm text-center">
+              <div className="bg-red-500 bg-opacity-20 border border-red-500 rounded-lg p-3 text-red-400 text-xs sm:text-sm text-center">
                 {authError}
               </div>
             )}
 
             {/* Name Field (Signup only) */}
             {!isLogin && (
-              <div className="transform transition-all duration-300 ease-in-out">
+              <div className="transition-all duration-300 ease-in-out">
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 w-5 h-5" />
                   <input
@@ -243,15 +243,15 @@ function App() {
                     placeholder="Full Name"
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                   />
                 </div>
-                {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name}</p>}
+                {errors.name && <p className="text-red-400 text-xs sm:text-sm mt-1">{errors.name}</p>}
               </div>
             )}
 
             {/* Email Field */}
-            <div className="transform transition-all duration-300 ease-in-out">
+            <div className="transition-all duration-300 ease-in-out">
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 w-5 h-5" />
                 <input
@@ -259,15 +259,15 @@ function App() {
                   placeholder="Email Address"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                 />
               </div>
-              {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
+              {errors.email && <p className="text-red-400 text-xs sm:text-sm mt-1">{errors.email}</p>}
             </div>
 
             {/* Phone Field (Signup only) */}
             {!isLogin && (
-              <div className="transform transition-all duration-300 ease-in-out">
+              <div className="transition-all duration-300 ease-in-out">
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 w-5 h-5" />
                   <input
@@ -276,16 +276,16 @@ function App() {
                     maxLength={10}
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                   />
                 </div>
-                {errors.phone && <p className="text-red-400 text-sm mt-1">{errors.phone}</p>}
+                {errors.phone && <p className="text-red-400 text-xs sm:text-sm mt-1">{errors.phone}</p>}
               </div>
             )}
 
             {/* Admission Number Field (Signup only) */}
             {!isLogin && (
-              <div className="transform transition-all duration-300 ease-in-out">
+              <div className="transition-all duration-300 ease-in-out">
                 <div className="relative">
                   <Hash className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 w-5 h-5" />
                   <input
@@ -294,22 +294,22 @@ function App() {
                     maxLength={6}
                     value={formData.admissionNumber}
                     onChange={(e) => handleInputChange('admissionNumber', e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                   />
                 </div>
-                {errors.admissionNumber && <p className="text-red-400 text-sm mt-1">{errors.admissionNumber}</p>}
+                {errors.admissionNumber && <p className="text-red-400 text-xs sm:text-sm mt-1">{errors.admissionNumber}</p>}
               </div>
             )}
 
             {/* Branch Field (Signup only) */}
             {!isLogin && (
-              <div className="transform transition-all duration-300 ease-in-out">
+              <div className="transition-all duration-300 ease-in-out">
                 <div className="relative">
                   <GraduationCap className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 w-5 h-5" />
                   <select
                     value={formData.branch}
                     onChange={(e) => handleInputChange('branch', e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 appearance-none"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 appearance-none text-sm sm:text-base"
                   >
                     <option value="">Select Branch</option>
                     {branches.map((branch) => (
@@ -319,12 +319,12 @@ function App() {
                     ))}
                   </select>
                 </div>
-                {errors.branch && <p className="text-red-400 text-sm mt-1">{errors.branch}</p>}
+                {errors.branch && <p className="text-red-400 text-xs sm:text-sm mt-1">{errors.branch}</p>}
               </div>
             )}
 
             {/* Password Field */}
-            <div className="transform transition-all duration-300 ease-in-out">
+            <div className="transition-all duration-300 ease-in-out">
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 w-5 h-5" />
                 <input
@@ -332,7 +332,7 @@ function App() {
                   placeholder="Password"
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
-                  className="w-full pl-12 pr-12 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                  className="w-full pl-12 pr-12 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                 />
                 <button
                   type="button"
@@ -342,12 +342,12 @@ function App() {
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
-              {errors.password && <p className="text-red-400 text-sm mt-1">{errors.password}</p>}
+              {errors.password && <p className="text-red-400 text-xs sm:text-sm mt-1">{errors.password}</p>}
             </div>
 
             {/* Confirm Password Field (Signup only) */}
             {!isLogin && (
-              <div className="transform transition-all duration-300 ease-in-out">
+              <div className="transition-all duration-300 ease-in-out">
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 w-5 h-5" />
                   <input
@@ -355,7 +355,7 @@ function App() {
                     placeholder="Confirm Password"
                     value={formData.confirmPassword}
                     onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                    className="w-full pl-12 pr-12 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                    className="w-full pl-12 pr-12 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                   />
                   <button
                     type="button"
@@ -365,7 +365,7 @@ function App() {
                     {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
-                {errors.confirmPassword && <p className="text-red-400 text-sm mt-1">{errors.confirmPassword}</p>}
+                {errors.confirmPassword && <p className="text-red-400 text-xs sm:text-sm mt-1">{errors.confirmPassword}</p>}
               </div>
             )}
 
@@ -373,7 +373,7 @@ function App() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
             >
               {isLoading ? (isLogin ? 'Signing In...' : 'Creating Account...') : (isLogin ? 'Sign In' : 'Create Account')}
             </button>
@@ -383,7 +383,7 @@ function App() {
               <button
                 type="button"
                 onClick={toggleMode}
-                className="text-purple-400 hover:text-purple-300 transition-colors duration-300 text-sm"
+                className="text-purple-400 hover:text-purple-300 transition-colors duration-300 text-xs sm:text-sm"
               >
                 {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
               </button>

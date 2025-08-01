@@ -59,20 +59,20 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
       {/* Header */}
       <header className="relative z-10 bg-black bg-opacity-40 backdrop-blur-xl border-b border-purple-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 space-y-3 sm:space-y-0">
+            <div className="flex items-center space-x-3 sm:space-x-4">
               <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
                 <Trophy className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white">Test Results</h1>
-                <p className="text-sm text-gray-300">Recruitment Examination</p>
+                <h1 className="text-lg sm:text-xl font-bold text-white">Test Results</h1>
+                <p className="text-xs sm:text-sm text-gray-300">Recruitment Examination</p>
               </div>
             </div>
             
             <button
               onClick={onBackToPortal}
-              className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300"
+              className="flex items-center space-x-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 text-sm sm:text-base w-full sm:w-auto justify-center"
             >
               <Home className="w-4 h-4" />
               <span>Back to Portal</span>
@@ -85,65 +85,65 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
       <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Congratulations Section */}
         <div className="text-center mb-8 animate-fade-in">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full mb-6">
-            <Trophy className="w-10 h-10 text-white" />
+          <div className="inline-flex items-center justify-center w-16 sm:w-20 h-16 sm:h-20 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full mb-4 sm:mb-6">
+            <Trophy className="w-8 sm:w-10 h-8 sm:h-10 text-white" />
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
             Test Completed!
           </h2>
-          <p className="text-xl text-gray-300 mb-2">
+          <p className="text-lg sm:text-xl text-gray-300 mb-2 px-4">
             Congratulations, {userProfile.name}
           </p>
-          <p className="text-lg text-gray-400">
+          <p className="text-base sm:text-lg text-gray-400 px-4">
             {gradeInfo.message}
           </p>
         </div>
 
         {/* Score Card */}
-        <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-8 mb-8 animate-slide-up">
-          <div className="grid md:grid-cols-4 gap-6">
+        <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 animate-slide-up">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             {/* Score */}
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Target className="w-8 h-8 text-white" />
+              <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                <Target className="w-6 sm:w-8 h-6 sm:h-8 text-white" />
               </div>
-              <h3 className="text-3xl font-bold text-white mb-1">
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">
                 {currentResult.score}/{currentResult.totalQuestions}
               </h3>
-              <p className="text-gray-400 text-sm">Questions Correct</p>
+              <p className="text-gray-400 text-xs sm:text-sm">Questions Correct</p>
             </div>
 
             {/* Percentage */}
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-violet-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                <BarChart3 className="w-8 h-8 text-white" />
+              <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-r from-purple-500 to-violet-500 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                <BarChart3 className="w-6 sm:w-8 h-6 sm:h-8 text-white" />
               </div>
-              <h3 className="text-3xl font-bold text-white mb-1">
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">
                 {currentResult.percentage}%
               </h3>
-              <p className="text-gray-400 text-sm">Score Percentage</p>
+              <p className="text-gray-400 text-xs sm:text-sm">Score Percentage</p>
             </div>
 
             {/* Grade */}
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Award className="w-8 h-8 text-white" />
+              <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                <Award className="w-6 sm:w-8 h-6 sm:h-8 text-white" />
               </div>
-              <h3 className={`text-3xl font-bold mb-1 ${gradeInfo.color}`}>
+              <h3 className={`text-xl sm:text-2xl lg:text-3xl font-bold mb-1 ${gradeInfo.color}`}>
                 {gradeInfo.grade}
               </h3>
-              <p className="text-gray-400 text-sm">Grade Achieved</p>
+              <p className="text-gray-400 text-xs sm:text-sm">Grade Achieved</p>
             </div>
 
             {/* Time */}
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Clock className="w-8 h-8 text-white" />
+              <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                <Clock className="w-6 sm:w-8 h-6 sm:h-8 text-white" />
               </div>
-              <h3 className="text-3xl font-bold text-white mb-1">
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">
                 {formatTime(currentResult.timeSpent)}
               </h3>
-              <p className="text-gray-400 text-sm">Time Taken</p>
+              <p className="text-gray-400 text-xs sm:text-sm">Time Taken</p>
             </div>
           </div>
         </div>
@@ -152,7 +152,7 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
         <div className="text-center mb-8">
           <button
             onClick={() => setShowDetailedResults(!showDetailedResults)}
-            className="px-6 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 rounded-lg text-white hover:bg-gray-600 hover:border-gray-500 transition-all duration-300"
+            className="px-4 sm:px-6 py-2 sm:py-3 bg-gray-700 bg-opacity-50 border border-gray-600 rounded-lg text-white hover:bg-gray-600 hover:border-gray-500 transition-all duration-300 text-sm sm:text-base w-full max-w-xs sm:max-w-none sm:w-auto"
           >
             {showDetailedResults ? 'Hide' : 'Show'} Detailed Results
           </button>
@@ -160,44 +160,44 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
 
         {/* Detailed Results */}
         {showDetailedResults && (
-          <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-8 mb-8 animate-slide-up">
-            <h3 className="text-2xl font-bold text-white mb-6 flex items-center space-x-3">
+          <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 animate-slide-up">
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center space-x-3">
               <BarChart3 className="w-6 h-6 text-purple-400" />
               <span>Question-wise Analysis</span>
             </h3>
             
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {questions.map((question, index) => {
                 const userAnswer = currentResult.answers.find(a => a.questionId === question.id);
                 const isCorrect = userAnswer?.isCorrect || false;
                 const selectedAnswer = userAnswer?.selectedAnswer ?? -1;
                 
                 return (
-                  <div key={question.id} className="bg-gray-800 bg-opacity-50 rounded-lg p-4 border border-gray-700">
-                    <div className="flex items-start justify-between mb-3">
+                  <div key={question.id} className="bg-gray-800 bg-opacity-50 rounded-lg p-3 sm:p-4 border border-gray-700">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-3 space-y-2 sm:space-y-0">
                       <div className="flex items-center space-x-3">
-                        <span className="text-gray-400 font-semibold">Q{index + 1}</span>
+                        <span className="text-gray-400 font-semibold text-sm sm:text-base">Q{index + 1}</span>
                         {isCorrect ? (
                           <CheckCircle className="w-5 h-5 text-green-400" />
                         ) : (
                           <XCircle className="w-5 h-5 text-red-400" />
                         )}
-                        <span className={`text-sm font-semibold ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
+                        <span className={`text-xs sm:text-sm font-semibold ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
                           {isCorrect ? 'Correct' : 'Incorrect'}
                         </span>
                       </div>
-                      <span className="px-2 py-1 bg-purple-600 bg-opacity-30 border border-purple-500/30 rounded text-purple-300 text-xs">
+                      <span className="px-2 py-1 bg-purple-600 bg-opacity-30 border border-purple-500/30 rounded text-purple-300 text-xs w-fit">
                         {question.category}
                       </span>
                     </div>
                     
-                    <p className="text-white mb-3">{question.question}</p>
+                    <p className="text-sm sm:text-base text-white mb-3">{question.question}</p>
                     
-                    <div className="grid gap-2">
+                    <div className="space-y-2">
                       {question.options.map((option, optionIndex) => (
                         <div
                           key={optionIndex}
-                          className={`p-2 rounded border text-sm ${
+                          className={`p-2 sm:p-3 rounded border text-xs sm:text-sm ${
                             optionIndex === question.correctAnswer
                               ? 'bg-green-600 bg-opacity-20 border-green-500 text-green-300'
                               : optionIndex === selectedAnswer && !isCorrect
@@ -205,14 +205,14 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
                               : 'bg-gray-700 bg-opacity-50 border-gray-600 text-gray-300'
                           }`}
                         >
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-start space-x-2">
                             <span className="font-semibold">{String.fromCharCode(65 + optionIndex)}.</span>
-                            <span>{option}</span>
+                            <span className="flex-1">{option}</span>
                             {optionIndex === question.correctAnswer && (
-                              <CheckCircle className="w-4 h-4 text-green-400 ml-auto" />
+                              <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
                             )}
                             {optionIndex === selectedAnswer && optionIndex !== question.correctAnswer && (
-                              <XCircle className="w-4 h-4 text-red-400 ml-auto" />
+                              <XCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
                             )}
                           </div>
                         </div>
@@ -227,21 +227,21 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
 
         {/* Previous Results */}
         {!loading && allResults.length > 1 && (
-          <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-8 animate-slide-up">
-            <h3 className="text-2xl font-bold text-white mb-6 flex items-center space-x-3">
+          <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-4 sm:p-6 lg:p-8 animate-slide-up">
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center space-x-3">
               <RotateCcw className="w-6 h-6 text-purple-400" />
               <span>Previous Attempts</span>
             </h3>
             
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto -mx-2 sm:mx-0">
               <table className="w-full text-left">
                 <thead>
                   <tr className="border-b border-gray-700">
-                    <th className="pb-3 text-gray-300 font-semibold">Date</th>
-                    <th className="pb-3 text-gray-300 font-semibold">Score</th>
-                    <th className="pb-3 text-gray-300 font-semibold">Percentage</th>
-                    <th className="pb-3 text-gray-300 font-semibold">Grade</th>
-                    <th className="pb-3 text-gray-300 font-semibold">Time</th>
+                    <th className="pb-3 text-gray-300 font-semibold text-xs sm:text-sm px-2 sm:px-0">Date</th>
+                    <th className="pb-3 text-gray-300 font-semibold text-xs sm:text-sm px-2 sm:px-0">Score</th>
+                    <th className="pb-3 text-gray-300 font-semibold text-xs sm:text-sm px-2 sm:px-0">%</th>
+                    <th className="pb-3 text-gray-300 font-semibold text-xs sm:text-sm px-2 sm:px-0">Grade</th>
+                    <th className="pb-3 text-gray-300 font-semibold text-xs sm:text-sm px-2 sm:px-0">Time</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -249,19 +249,19 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
                     const grade = testService.getGradeFromPercentage(result.percentage);
                     return (
                       <tr key={result.id} className="border-b border-gray-800">
-                        <td className="py-3 text-gray-300">
+                        <td className="py-2 sm:py-3 text-gray-300 text-xs sm:text-sm px-2 sm:px-0">
                           {new Date(result.completedAt).toLocaleDateString()}
                         </td>
-                        <td className="py-3 text-white">
+                        <td className="py-2 sm:py-3 text-white text-xs sm:text-sm px-2 sm:px-0">
                           {result.score}/{result.totalQuestions}
                         </td>
-                        <td className="py-3 text-white">
+                        <td className="py-2 sm:py-3 text-white text-xs sm:text-sm px-2 sm:px-0">
                           {result.percentage}%
                         </td>
-                        <td className={`py-3 font-semibold ${grade.color}`}>
+                        <td className={`py-2 sm:py-3 font-semibold text-xs sm:text-sm px-2 sm:px-0 ${grade.color}`}>
                           {grade.grade}
                         </td>
-                        <td className="py-3 text-gray-300">
+                        <td className="py-2 sm:py-3 text-gray-300 text-xs sm:text-sm px-2 sm:px-0">
                           {formatTime(result.timeSpent)}
                         </td>
                       </tr>

@@ -12,7 +12,7 @@ interface ExamPortalProps {
 }
 
 const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) => {
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes countdown
+  const [timeLeft, setTimeLeft] = useState(10); // 5 minutes countdown
   const [isTestStarted, setIsTestStarted] = useState(false);
   const [isTestCompleted, setIsTestCompleted] = useState(false);
   const [testResult, setTestResult] = useState<any>(null);

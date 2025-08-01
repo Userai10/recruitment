@@ -2,7 +2,8 @@ import {
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
   signOut,
-  User
+  User,
+  onAuthStateChanged
 } from 'firebase/auth';
 import { 
   doc, 
@@ -132,7 +133,12 @@ export const authService = {
   },
 
   async getCurrentUser(): Promise<User | null> {
-    return auth.currentUser;
+    return new Promise((resolve) => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        unsubscribe();
+        resolve(user);
+      });
+    });
   },
 
   async getUserProfile(userId: string): Promise<UserProfile | null> {

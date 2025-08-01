@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { Eye, EyeOff, User, Mail, Phone, Hash, GraduationCap, Lock } from 'lucide-react';
 import { authService } from './services/authService';
+import ExamPortal from './components/ExamPortal';
+import type { UserProfile } from './lib/firebase';
 
 interface FormData {
   name: string;
@@ -14,6 +17,10 @@ interface FormData {
 
 function App() {
   const [isLogin, setIsLogin] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [authError, setAuthError] = useState('');
@@ -39,6 +46,29 @@ function App() {
     'Chemical Engineering',
     'Biotechnology'
   ];
+
+  // Check authentication status on app load
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const user = await authService.getCurrentUser();
+        if (user) {
+          const profile = await authService.getUserProfile(user.uid);
+          if (profile) {
+            setCurrentUser(user);
+            setUserProfile(profile);
+            setIsAuthenticated(true);
+          }
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+      } finally {
+        setIsCheckingAuth(false);
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
 
   const validateForm = () => {
     const newErrors: Partial<FormData> = {};
@@ -80,7 +110,9 @@ function App() {
           email: formData.email,
           password: formData.password
         });
-        console.log('Login successful');
+        setCurrentUser(result.user);
+        setUserProfile(result.profile);
+        setIsAuthenticated(true);
       } else {
         const result = await authService.signup({
           name: formData.name,
@@ -90,7 +122,9 @@ function App() {
           branch: formData.branch,
           password: formData.password
         });
-        console.log('Signup successful');
+        setCurrentUser(result.user);
+        setUserProfile(result.profile);
+        setIsAuthenticated(true);
       }
     } catch (error) {
       setAuthError(error.message);
@@ -122,6 +156,49 @@ function App() {
     });
   };
 
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setCurrentUser(null);
+    setUserProfile(null);
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      admissionNumber: '',
+      branch: '',
+      password: '',
+      confirmPassword: ''
+    });
+    setErrors({});
+    setAuthError('');
+  };
+
+  // Show loading screen while checking authentication
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full mb-4 animate-pulse">
+            <GraduationCap className="w-8 h-8 text-white" />
+          </div>
+          <p className="text-white text-lg">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show exam portal if authenticated
+  if (isAuthenticated && currentUser && userProfile) {
+    return (
+      <ExamPortal 
+        user={currentUser} 
+        userProfile={userProfile} 
+        onLogout={handleLogout}
+      />
+    );
+  }
+
+  // Show login/signup form if not authenticated
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center p-4 relative overflow-hidden">
       {/* Animated Background Elements */}

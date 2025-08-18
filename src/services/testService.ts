@@ -11,6 +11,12 @@ import {
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
+export interface TestSettings {
+  testDeadline: Date;
+  maxTabSwitches: number;
+  isTestActive: boolean;
+}
+
 export interface TestQuestion {
   id: string;
   question: string;
@@ -41,7 +47,150 @@ export interface TestResult {
   status: 'completed' | 'in-progress' | 'abandoned';
 }
 
+export interface UserTestStatus {
+  userId: string;
+  hasSubmitted: boolean;
+  submissionDate?: Date;
+  tabSwitchCount: number;
+  isTestCancelled: boolean;
+  lastActivity: Date;
+}
+
 export const testService = {
+  // Test settings - you can modify these as needed
+  getTestSettings: (): TestSettings => ({
+    testDeadline: new Date('2025-01-31T23:59:59'), // Set your test deadline here
+    maxTabSwitches: 2,
+    isTestActive: true
+  }),
+
+  async getUserTestStatus(userId: string): Promise<UserTestStatus | null> {
+    try {
+      const statusDoc = await getDoc(doc(db, 'userTestStatus', userId));
+      
+      if (statusDoc.exists()) {
+        const data = statusDoc.data();
+        return {
+          userId,
+          hasSubmitted: data.hasSubmitted || false,
+          submissionDate: data.submissionDate?.toDate(),
+          tabSwitchCount: data.tabSwitchCount || 0,
+          isTestCancelled: data.isTestCancelled || false,
+          lastActivity: data.lastActivity?.toDate() || new Date()
+        };
+      }
+      
+      return null;
+    } catch (error: any) {
+      throw new Error(error.message || 'Failed to get user test status');
+    }
+  },
+
+  async updateUserTestStatus(userId: string, status: Partial<UserTestStatus>): Promise<void> {
+    try {
+      const statusRef = doc(db, 'userTestStatus', userId);
+      await updateDoc(statusRef, {
+        ...status,
+        lastActivity: new Date()
+      });
+    } catch (error: any) {
+      // If document doesn't exist, create it
+      if (error.code === 'not-found') {
+        await addDoc(collection(db, 'userTestStatus'), {
+          userId,
+          hasSubmitted: false,
+          tabSwitchCount: 0,
+          isTestCancelled: false,
+          lastActivity: new Date(),
+          ...status
+        });
+      } else {
+        throw new Error(error.message || 'Failed to update user test status');
+      }
+    }
+  },
+
+  async markTestAsSubmitted(userId: string): Promise<void> {
+    try {
+      const statusRef = doc(db, 'userTestStatus', userId);
+      const statusDoc = await getDoc(statusRef);
+      
+      if (statusDoc.exists()) {
+        await updateDoc(statusRef, {
+          hasSubmitted: true,
+          submissionDate: new Date(),
+          lastActivity: new Date()
+        });
+      } else {
+        await addDoc(collection(db, 'userTestStatus'), {
+          userId,
+          hasSubmitted: true,
+          submissionDate: new Date(),
+          tabSwitchCount: 0,
+          isTestCancelled: false,
+          lastActivity: new Date()
+        });
+      }
+    } catch (error: any) {
+      throw new Error(error.message || 'Failed to mark test as submitted');
+    }
+  },
+
+  async incrementTabSwitchCount(userId: string): Promise<number> {
+    try {
+      const statusRef = doc(db, 'userTestStatus', userId);
+      const statusDoc = await getDoc(statusRef);
+      
+      let newCount = 1;
+      
+      if (statusDoc.exists()) {
+        const currentCount = statusDoc.data().tabSwitchCount || 0;
+        newCount = currentCount + 1;
+        
+        await updateDoc(statusRef, {
+          tabSwitchCount: newCount,
+          lastActivity: new Date()
+        });
+      } else {
+        await addDoc(collection(db, 'userTestStatus'), {
+          userId,
+          hasSubmitted: false,
+          tabSwitchCount: newCount,
+          isTestCancelled: false,
+          lastActivity: new Date()
+        });
+      }
+      
+      return newCount;
+    } catch (error: any) {
+      throw new Error(error.message || 'Failed to increment tab switch count');
+    }
+  },
+
+  async cancelTest(userId: string): Promise<void> {
+    try {
+      const statusRef = doc(db, 'userTestStatus', userId);
+      const statusDoc = await getDoc(statusRef);
+      
+      if (statusDoc.exists()) {
+        await updateDoc(statusRef, {
+          isTestCancelled: true,
+          lastActivity: new Date()
+        });
+      } else {
+        await addDoc(collection(db, 'userTestStatus'), {
+          userId,
+          hasSubmitted: false,
+          tabSwitchCount: 0,
+          isTestCancelled: true,
+          lastActivity: new Date()
+        });
+      }
+    } catch (error: any) {
+      throw new Error(error.message || 'Failed to cancel test');
+    }
+  },
+
   // Sample test questions
   getTestQuestions: (): TestQuestion[] => [
     {
@@ -168,6 +317,9 @@ export const testService = {
 
   async submitTestResult(testResult: Omit<TestResult, 'id'>): Promise<string> {
     try {
+      // Mark test as submitted
+      await this.markTestAsSubmitted(testResult.userId);
+      
       const docRef = await addDoc(collection(db, 'testResults'), {
         ...testResult,
         completedAt: new Date()

@@ -13,24 +13,113 @@ const TestInterface: React.FC<TestInterfaceProps> = ({ user, userProfile, onTest
   const [questions] = useState<TestQuestion[]>(testService.getTestQuestions());
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<{ [key: string]: number }>({});
-  const [timeLeft, setTimeLeft] = useState(3600); // 60 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [startTime] = useState(new Date());
+  const [testSettings] = useState(testService.getTestSettings());
+  const [tabSwitchCount, setTabSwitchCount] = useState(0);
+  const [showTabWarning, setShowTabWarning] = useState(false);
+  const [isTestCancelled, setIsTestCancelled] = useState(false);
 
   useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    } else {
+    // Update countdown timer based on test deadline
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const deadline = testSettings.testDeadline.getTime();
+      const difference = deadline - now;
+      
+      if (difference > 0) {
+        setTimeLeft(Math.floor(difference / 1000));
+      } else {
+        setTimeLeft(0);
+        handleSubmitTest(); // Auto-submit when deadline is reached
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [testSettings.testDeadline]);
+
+  useEffect(() => {
+    // Tab/window switching detection
+    const handleVisibilityChange = async () => {
+      if (document.hidden && !isSubmitting && !isTestCancelled) {
+        try {
+          const newCount = await testService.incrementTabSwitchCount(user.uid);
+          setTabSwitchCount(newCount);
+          
+          if (newCount === 1) {
+            setShowTabWarning(true);
+            setTimeout(() => setShowTabWarning(false), 5000); // Hide warning after 5 seconds
+          } else if (newCount > testSettings.maxTabSwitches) {
+            // Cancel test
+            await testService.cancelTest(user.uid);
+            setIsTestCancelled(true);
+            alert('Test cancelled due to excessive tab switching. Your test has been terminated.');
+            onTestComplete({
+              userId: user.uid,
+              userName: userProfile.name,
+              userEmail: userProfile.email,
+              admissionNumber: userProfile.admissionNumber,
+              branch: userProfile.branch,
+              score: 0,
+              totalQuestions: questions.length,
+              percentage: 0,
+              timeSpent: Math.floor((new Date().getTime() - startTime.getTime()) / 1000),
+              answers: [],
+              completedAt: new Date(),
+              status: 'abandoned' as const
+            });
+          }
+        } catch (error) {
+          console.error('Failed to handle tab switch:', error);
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [user.uid, testSettings.maxTabSwitches, isSubmitting, isTestCancelled, questions.length, userProfile, startTime, onTestComplete]);
+
+  useEffect(() => {
+    // Prevent page refresh/navigation
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (!isSubmitting && !isTestCancelled) {
+        e.preventDefault();
+        e.returnValue = 'Are you sure you want to leave? Your test progress will be lost.';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isSubmitting, isTestCancelled]);
+
+  // Auto-submit when time runs out
+  useEffect(() => {
+    if (timeLeft <= 0 && !isSubmitting && !isTestCancelled) {
       handleSubmitTest();
+    } else {
     }
-  }, [timeLeft]);
+  }, [timeLeft, isSubmitting, isTestCancelled]);
 
   const formatTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600);
+    const days = Math.floor(seconds / (24 * 3600));
+    const hours = Math.floor((seconds % (24 * 3600)) / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    
+    if (days > 0) {
+      return `${days}d ${hours}h ${mins}m ${secs}s`;
+    } else if (hours > 0) {
+      return `${hours}h ${mins}m ${secs}s`;
+    } else {
+      return `${mins}m ${secs}s`;
+    }
   };
 
   const handleAnswerSelect = (questionId: string, answerIndex: number) => {
@@ -41,7 +130,7 @@ const TestInterface: React.FC<TestInterfaceProps> = ({ user, userProfile, onTest
   };
 
   const handleSubmitTest = async () => {
-    if (isSubmitting) return;
+    if (isSubmitting || isTestCancelled) return;
     
     setIsSubmitting(true);
     
@@ -93,8 +182,44 @@ const TestInterface: React.FC<TestInterfaceProps> = ({ user, userProfile, onTest
   const currentQuestion = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
+  // Show test cancelled message
+  if (isTestCancelled) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-8">
+          <div className="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <AlertCircle className="w-10 h-10 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-4">Test Cancelled</h2>
+          <p className="text-gray-300 mb-6">
+            Your test has been cancelled due to excessive tab switching. This is a security measure to ensure test integrity.
+          </p>
+          <p className="text-red-400 text-sm">
+            You switched tabs/windows {tabSwitchCount} times. Maximum allowed: {testSettings.maxTabSwitches}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black relative overflow-hidden">
+      {/* Tab Switch Warning */}
+      {showTabWarning && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-yellow-500 bg-opacity-90 backdrop-blur-xl border border-yellow-400 rounded-lg p-4 max-w-md mx-auto animate-bounce">
+          <div className="flex items-center space-x-3">
+            <AlertCircle className="w-6 h-6 text-yellow-900" />
+            <div>
+              <p className="text-yellow-900 font-semibold text-sm">Warning!</p>
+              <p className="text-yellow-800 text-xs">
+                You have switched the window. Doing this more times may cancel your test.
+                ({tabSwitchCount}/{testSettings.maxTabSwitches} switches used)
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-600 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
@@ -117,14 +242,19 @@ const TestInterface: React.FC<TestInterfaceProps> = ({ user, userProfile, onTest
             <div className="flex items-center justify-between sm:justify-end space-x-3 sm:space-x-6 w-full sm:w-auto">
               <div className="flex items-center space-x-2 text-white">
                 <Clock className="w-5 h-5 text-purple-400" />
-                <span className="font-mono text-base sm:text-lg">{formatTime(timeLeft)}</span>
+                <span className={`font-mono text-base sm:text-lg ${timeLeft < 300 ? 'text-red-400' : ''}`}>
+                  {formatTime(timeLeft)}
+                </span>
               </div>
               <button
                 onClick={handleSubmitTest}
-                disabled={isSubmitting}
-                className="px-3 sm:px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 disabled:opacity-50 text-sm sm:text-base whitespace-nowrap"
+                disabled={isSubmitting || isTestCancelled}
+                className="px-3 sm:px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 disabled:opacity-50 text-sm sm:text-base whitespace-nowrap flex items-center space-x-2"
               >
-                {isSubmitting ? 'Submitting...' : 'Submit Test'}
+                <span>{isSubmitting ? 'Submitting...' : 'Submit Test'}</span>
+                {timeLeft < 300 && (
+                  <AlertCircle className="w-4 h-4 text-red-400" />
+                )}
               </button>
             </div>
           </div>
@@ -134,11 +264,19 @@ const TestInterface: React.FC<TestInterfaceProps> = ({ user, userProfile, onTest
       {/* Progress Bar */}
       <div className="relative z-10 bg-black bg-opacity-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
+          <div className="h-2 bg-gray-700 rounded-full overflow-hidden relative">
             <div 
-              className="h-full bg-gradient-to-r from-purple-500 to-blue-500 transition-all duration-300"
+              className={`h-full transition-all duration-300 ${
+                timeLeft < 300 
+                  ? 'bg-gradient-to-r from-red-500 to-red-600' 
+                  : 'bg-gradient-to-r from-purple-500 to-blue-500'
+              }`}
               style={{ width: `${progress}%` }}
             ></div>
+            {/* Tab switch indicator */}
+            {tabSwitchCount > 0 && (
+              <div className="absolute top-0 right-0 h-full w-2 bg-yellow-500"></div>
+            )}
           </div>
         </div>
       </div>

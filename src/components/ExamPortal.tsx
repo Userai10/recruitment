@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Clock, FileText, Users, Award, LogOut, Play, AlertCircle } from 'lucide-react';
 import { authService } from '../services/authService';
+import { testService } from '../services/testService';
 import TestInterface from './TestInterface';
 import TestResults from './TestResults';
 import type { UserProfile } from '../lib/firebase';
@@ -12,23 +13,69 @@ interface ExamPortalProps {
 }
 
 const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) => {
-  const [timeLeft, setTimeLeft] = useState(10); // 5 minutes countdown
+  const [timeLeft, setTimeLeft] = useState(0);
   const [isTestStarted, setIsTestStarted] = useState(false);
   const [isTestCompleted, setIsTestCompleted] = useState(false);
   const [testResult, setTestResult] = useState<any>(null);
   const [showInstructions, setShowInstructions] = useState(true);
+  const [userTestStatus, setUserTestStatus] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [testSettings] = useState(testService.getTestSettings());
 
   useEffect(() => {
-    if (timeLeft > 0 && !isTestStarted) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
+    checkUserTestStatus();
+  }, []);
+
+  useEffect(() => {
+    // Update countdown timer every second
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const deadline = testSettings.testDeadline.getTime();
+      const difference = deadline - now;
+      
+      if (difference > 0) {
+        setTimeLeft(Math.floor(difference / 1000));
+      } else {
+        setTimeLeft(0);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [testSettings.testDeadline]);
+
+  const checkUserTestStatus = async () => {
+    try {
+      const status = await testService.getUserTestStatus(user.uid);
+      setUserTestStatus(status);
+      
+      // If user has already submitted, load their results
+      if (status?.hasSubmitted) {
+        const results = await testService.getUserTestResults(user.uid);
+        if (results.length > 0) {
+          setTestResult(results[0]); // Get the latest result
+          setIsTestCompleted(true);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to check user test status:', error);
+    } finally {
+      setIsLoading(false);
     }
-  }, [timeLeft, isTestStarted]);
+  };
 
   const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
+    const days = Math.floor(seconds / (24 * 3600));
+    const hours = Math.floor((seconds % (24 * 3600)) / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    
+    if (days > 0) {
+      return `${days}d ${hours}h ${mins}m ${secs}s`;
+    } else if (hours > 0) {
+      return `${hours}h ${mins}m ${secs}s`;
+    } else {
+      return `${mins}m ${secs}s`;
+    }
   };
 
   const handleLogout = async () => {
@@ -41,6 +88,21 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
   };
 
   const handleStartTest = () => {
+    if (timeLeft <= 0) {
+      alert('Test deadline has passed. You cannot start the test.');
+      return;
+    }
+    
+    if (userTestStatus?.hasSubmitted) {
+      alert('You have already submitted the test.');
+      return;
+    }
+    
+    if (userTestStatus?.isTestCancelled) {
+      alert('Your test has been cancelled due to policy violations.');
+      return;
+    }
+    
     setIsTestStarted(true);
     setShowInstructions(false);
   };
@@ -54,9 +116,22 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
     setIsTestStarted(false);
     setIsTestCompleted(false);
     setTestResult(null);
-    setTimeLeft(300);
     setShowInstructions(true);
   };
+
+  // Show loading screen while checking status
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full mb-4 animate-pulse">
+            <Award className="w-8 h-8 text-white" />
+          </div>
+          <p className="text-white text-lg">Loading test status...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Show test results if completed
   if (isTestCompleted && testResult) {
@@ -144,12 +219,40 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
             <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-6 sm:p-8 text-center w-full max-w-md">
               <div className="flex items-center justify-center space-x-3 mb-4">
                 <Clock className="w-6 sm:w-8 h-6 sm:h-8 text-purple-400" />
-                <h3 className="text-lg sm:text-2xl font-bold text-white">Test Begins In</h3>
+                <h3 className="text-lg sm:text-2xl font-bold text-white">
+                  {timeLeft > 0 ? 'Test Deadline' : 'Test Ended'}
+                </h3>
               </div>
-              <div className="text-4xl sm:text-5xl md:text-6xl font-mono font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-4">
+              <div className={`text-4xl sm:text-5xl md:text-6xl font-mono font-bold text-transparent bg-clip-text mb-4 ${
+                timeLeft > 0 
+                  ? 'bg-gradient-to-r from-purple-400 to-blue-400' 
+                  : 'bg-gradient-to-r from-red-400 to-red-600'
+              }`}>
                 {formatTime(timeLeft)}
               </div>
-              <p className="text-sm sm:text-base text-gray-300">Please use this time to review the instructions</p>
+              <p className="text-sm sm:text-base text-gray-300">
+                {timeLeft > 0 
+                  ? 'Time remaining to complete the test' 
+                  : 'Test submission deadline has passed'
+                }
+              </p>
+              
+              {/* Show status messages */}
+              {userTestStatus?.hasSubmitted && (
+                <div className="mt-4 p-3 bg-green-500 bg-opacity-20 border border-green-500/30 rounded-lg">
+                  <p className="text-green-400 text-sm">
+                    ✓ Test already submitted on {new Date(userTestStatus.submissionDate).toLocaleDateString()}
+                  </p>
+                </div>
+              )}
+              
+              {userTestStatus?.isTestCancelled && (
+                <div className="mt-4 p-3 bg-red-500 bg-opacity-20 border border-red-500/30 rounded-lg">
+                  <p className="text-red-400 text-sm">
+                    ✗ Test cancelled due to policy violations
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -225,15 +328,24 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
           <div className="flex justify-center">
             <button
               onClick={handleStartTest}
-              disabled={timeLeft > 0}
+              disabled={timeLeft <= 0 || userTestStatus?.hasSubmitted || userTestStatus?.isTestCancelled}
               className={`flex items-center space-x-3 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-300 w-full max-w-xs sm:max-w-none sm:w-auto ${
-                timeLeft > 0
+                timeLeft <= 0 || userTestStatus?.hasSubmitted || userTestStatus?.isTestCancelled
                   ? 'bg-gray-600 bg-opacity-50 text-gray-400 cursor-not-allowed'
                   : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 hover:scale-105 shadow-lg hover:shadow-purple-500/25'
               }`}
             >
               <Play className="w-5 sm:w-6 h-5 sm:h-6" />
-              <span>{timeLeft > 0 ? 'Please Wait...' : 'Start Test Now'}</span>
+              <span>
+                {userTestStatus?.hasSubmitted 
+                  ? 'Test Submitted' 
+                  : userTestStatus?.isTestCancelled 
+                  ? 'Test Cancelled' 
+                  : timeLeft <= 0 
+                  ? 'Test Ended' 
+                  : 'Start Test Now'
+                }
+              </span>
             </button>
           </div>
         </div>

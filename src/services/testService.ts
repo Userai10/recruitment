@@ -60,7 +60,7 @@ export interface UserTestStatus {
 export const testService = {
   // Test settings - you can modify these as needed
   getTestSettings: (): TestSettings => ({
-    testDeadline: new Date('2025-01-31T23:59:59'), // Set your test deadline here
+    testDeadline: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days from now
     maxTabSwitches: 2,
     isTestActive: true
   }),

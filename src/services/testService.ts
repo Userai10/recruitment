@@ -7,7 +7,8 @@ import {
   orderBy, 
   doc, 
   updateDoc,
-  getDoc 
+  getDoc,
+  setDoc
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
@@ -96,7 +97,7 @@ export const testService = {
     } catch (error: any) {
       // If document doesn't exist, create it
       if (error.code === 'not-found') {
-        await addDoc(collection(db, 'userTestStatus'), {
+        await setDoc(doc(db, 'userTestStatus', userId), {
           userId,
           hasSubmitted: false,
           tabSwitchCount: 0,
@@ -122,7 +123,7 @@ export const testService = {
           lastActivity: new Date()
         });
       } else {
-        await addDoc(collection(db, 'userTestStatus'), {
+        await setDoc(doc(db, 'userTestStatus', userId), {
           userId,
           hasSubmitted: true,
           submissionDate: new Date(),
@@ -152,7 +153,7 @@ export const testService = {
           lastActivity: new Date()
         });
       } else {
-        await addDoc(collection(db, 'userTestStatus'), {
+        await setDoc(doc(db, 'userTestStatus', userId), {
           userId,
           hasSubmitted: false,
           tabSwitchCount: newCount,
@@ -178,7 +179,7 @@ export const testService = {
           lastActivity: new Date()
         });
       } else {
-        await addDoc(collection(db, 'userTestStatus'), {
+        await setDoc(doc(db, 'userTestStatus', userId), {
           userId,
           hasSubmitted: false,
           tabSwitchCount: 0,

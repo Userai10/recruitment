@@ -113,7 +113,7 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
     }
     
     if (userTestStatus?.hasSubmitted) {
-      alert('You have already submitted the test.');
+      alert('You have already submitted the test. You cannot reattempt.');
       return;
     }
     
@@ -129,13 +129,24 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
   const handleTestComplete = (result: any) => {
     setIsTestCompleted(true);
     setTestResult(result);
+    // Refresh user test status to reflect submission
+    checkUserTestStatus();
   };
 
   const handleBackToPortal = () => {
-    setIsTestStarted(false);
-    setIsTestCompleted(false);
-    setTestResult(null);
-    setShowInstructions(true);
+    // If user has submitted, don't allow going back to portal
+    if (userTestStatus?.hasSubmitted) {
+      // Stay on results page, user can only logout
+      return;
+    }
+    
+    // Only allow going back if test hasn't been submitted
+    if (!userTestStatus?.hasSubmitted) {
+      setIsTestStarted(false);
+      setIsTestCompleted(false);
+      setTestResult(null);
+      setShowInstructions(true);
+    }
   };
 
   // Show loading screen while checking status

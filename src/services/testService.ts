@@ -60,7 +60,7 @@ export interface UserTestStatus {
 
 export const testService = {
   getTestSettings: (): TestSettings => ({
-    testStartTime: new Date(Date.now() + 2 * 60 * 1000), // 2 minutes from now for testing
+    testStartTime: new Date('2025-01-19T10:00:00'), // Fixed start time for all users
     testDuration: 60, // 1 hour in minutes
     maxTabSwitches: 2,
     isTestActive: true

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, Clock, Target, Award, BarChart3, CheckCircle, XCircle, RotateCcw, Home } from 'lucide-react';
+import { Trophy, Clock, Target, Award, BarChart3, CheckCircle, XCircle, RotateCcw, LogOut } from 'lucide-react';
 import { testService, TestResult } from '../services/testService';
+import { authService } from '../services/authService';
 import type { UserProfile } from '../lib/firebase';
 
 interface TestResultsProps {
@@ -72,10 +73,10 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
             
             <button
               onClick={onBackToPortal}
-              className="flex items-center space-x-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 text-sm sm:text-base w-full sm:w-auto justify-center"
+              className="flex items-center space-x-2 px-3 sm:px-4 py-2 bg-red-600 bg-opacity-20 border border-red-500/30 rounded-lg text-red-400 hover:bg-red-600 hover:bg-opacity-30 transition-all duration-300 text-sm sm:text-base w-full sm:w-auto justify-center"
             >
-              <Home className="w-4 h-4" />
-              <span>Back to Portal</span>
+              <LogOut className="w-4 h-4" />
+              <span>Logout</span>
             </button>
           </div>
         </div>

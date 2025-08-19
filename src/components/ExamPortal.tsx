@@ -13,7 +13,9 @@ interface ExamPortalProps {
 }
 
 const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) => {
-  const [timeLeft, setTimeLeft] = useState(0);
+  const [timeUntilStart, setTimeUntilStart] = useState(0);
+  const [timeUntilEnd, setTimeUntilEnd] = useState(0);
+  const [isTestAvailable, setIsTestAvailable] = useState(false);
   const [isTestStarted, setIsTestStarted] = useState(false);
   const [isTestCompleted, setIsTestCompleted] = useState(false);
   const [testResult, setTestResult] = useState<any>(null);
@@ -27,21 +29,33 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
   }, []);
 
   useEffect(() => {
-    // Update countdown timer every second
+    // Update countdown timers every second
     const timer = setInterval(() => {
       const now = new Date().getTime();
-      const deadline = testSettings.testDeadline.getTime();
-      const difference = deadline - now;
+      const startTime = testSettings.testStartTime.getTime();
+      const endTime = testService.getTestEndTime().getTime();
       
-      if (difference > 0) {
-        setTimeLeft(Math.floor(difference / 1000));
+      // Time until test becomes available
+      const timeToStart = startTime - now;
+      if (timeToStart > 0) {
+        setTimeUntilStart(Math.floor(timeToStart / 1000));
+        setIsTestAvailable(false);
       } else {
-        setTimeLeft(0);
+        setTimeUntilStart(0);
+        setIsTestAvailable(true);
+        
+        // Time until test ends (1 hour after start)
+        const timeToEnd = endTime - now;
+        if (timeToEnd > 0) {
+          setTimeUntilEnd(Math.floor(timeToEnd / 1000));
+        } else {
+          setTimeUntilEnd(0);
+        }
       }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [testSettings.testDeadline]);
+  }, [testSettings.testStartTime]);
 
   const checkUserTestStatus = async () => {
     try {
@@ -88,8 +102,13 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
   };
 
   const handleStartTest = () => {
-    if (timeLeft <= 0) {
-      alert('Test deadline has passed. You cannot start the test.');
+    if (!isTestAvailable) {
+      alert('Test is not yet available. Please wait for the start time.');
+      return;
+    }
+    
+    if (timeUntilEnd <= 0) {
+      alert('Test time has expired. You cannot start the test.');
       return;
     }
     
@@ -220,19 +239,21 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
               <div className="flex items-center justify-center space-x-3 mb-4">
                 <Clock className="w-6 sm:w-8 h-6 sm:h-8 text-purple-400" />
                 <h3 className="text-lg sm:text-2xl font-bold text-white">
-                  {timeLeft > 0 ? 'Test Deadline' : 'Test Ended'}
+                  {!isTestAvailable ? 'Test Starts In' : timeUntilEnd > 0 ? 'Test Ends In' : 'Test Ended'}
                 </h3>
               </div>
               <div className={`text-4xl sm:text-5xl md:text-6xl font-mono font-bold text-transparent bg-clip-text mb-4 ${
-                timeLeft > 0 
+                (!isTestAvailable || timeUntilEnd > 0)
                   ? 'bg-gradient-to-r from-purple-400 to-blue-400' 
                   : 'bg-gradient-to-r from-red-400 to-red-600'
               }`}>
-                {formatTime(timeLeft)}
+                {!isTestAvailable ? formatTime(timeUntilStart) : formatTime(timeUntilEnd)}
               </div>
               <p className="text-sm sm:text-base text-gray-300">
-                {timeLeft > 0 
-                  ? 'Time remaining to complete the test' 
+                {!isTestAvailable 
+                  ? 'Time until test becomes available' 
+                  : timeUntilEnd > 0
+                  ? 'Time remaining to complete the test'
                   : 'Test submission deadline has passed'
                 }
               </p>
@@ -328,9 +349,9 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
           <div className="flex justify-center">
             <button
               onClick={handleStartTest}
-              disabled={timeLeft <= 0 || userTestStatus?.hasSubmitted || userTestStatus?.isTestCancelled}
+              disabled={!isTestAvailable || timeUntilEnd <= 0 || userTestStatus?.hasSubmitted || userTestStatus?.isTestCancelled}
               className={`flex items-center space-x-3 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-300 w-full max-w-xs sm:max-w-none sm:w-auto ${
-                timeLeft <= 0 || userTestStatus?.hasSubmitted || userTestStatus?.isTestCancelled
+                !isTestAvailable || timeUntilEnd <= 0 || userTestStatus?.hasSubmitted || userTestStatus?.isTestCancelled
                   ? 'bg-gray-600 bg-opacity-50 text-gray-400 cursor-not-allowed'
                   : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 hover:scale-105 shadow-lg hover:shadow-purple-500/25'
               }`}
@@ -341,7 +362,9 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
                   ? 'Test Submitted' 
                   : userTestStatus?.isTestCancelled 
                   ? 'Test Cancelled' 
-                  : timeLeft <= 0 
+                  : !isTestAvailable
+                  ? 'Test Not Available'
+                  : timeUntilEnd <= 0 
                   ? 'Test Ended' 
                   : 'Start Test Now'
                 }

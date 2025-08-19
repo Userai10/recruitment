@@ -13,7 +13,8 @@ import {
 import { db } from '../lib/firebase';
 
 export interface TestSettings {
-  testDeadline: Date;
+  testStartTime: Date;
+  testDuration: number; // in minutes
   maxTabSwitches: number;
   isTestActive: boolean;
 }
@@ -58,12 +59,22 @@ export interface UserTestStatus {
 }
 
 export const testService = {
-  // Test settings - you can modify these as needed
   getTestSettings: (): TestSettings => ({
-    testDeadline: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days from now
+    testStartTime: new Date(Date.now() + 2 * 60 * 1000), // 2 minutes from now for testing
+    testDuration: 60, // 1 hour in minutes
     maxTabSwitches: 2,
     isTestActive: true
   }),
+
+  isTestAvailable: (): boolean => {
+    const settings = testService.getTestSettings();
+    return new Date() >= settings.testStartTime;
+  },
+
+  getTestEndTime: (): Date => {
+    const settings = testService.getTestSettings();
+    return new Date(settings.testStartTime.getTime() + settings.testDuration * 60 * 1000);
+  },
 
   async getUserTestStatus(userId: string): Promise<UserTestStatus | null> {
     try {

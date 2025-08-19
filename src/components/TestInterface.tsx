@@ -22,22 +22,22 @@ const TestInterface: React.FC<TestInterfaceProps> = ({ user, userProfile, onTest
   const [isTestCancelled, setIsTestCancelled] = useState(false);
 
   useEffect(() => {
-    // Update countdown timer based on test deadline
+    // Update countdown timer based on test end time (1 hour from start)
     const timer = setInterval(() => {
       const now = new Date().getTime();
-      const deadline = testSettings.testDeadline.getTime();
-      const difference = deadline - now;
+      const endTime = testService.getTestEndTime().getTime();
+      const difference = endTime - now;
       
       if (difference > 0) {
         setTimeLeft(Math.floor(difference / 1000));
       } else {
         setTimeLeft(0);
-        handleSubmitTest(); // Auto-submit when deadline is reached
+        handleSubmitTest(); // Auto-submit when test time is up
       }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [testSettings.testDeadline]);
+  }, [testSettings.testStartTime]);
 
   useEffect(() => {
     // Tab/window switching detection

@@ -76,6 +76,17 @@ export const testService = {
     return new Date(settings.testStartTime.getTime() + settings.testDuration * 60 * 1000);
   },
 
+  // Check if user can take the test (hasn't submitted before)
+  async canUserTakeTest(userId: string): Promise<boolean> {
+    try {
+      const userStatus = await this.getUserTestStatus(userId);
+      return !userStatus?.hasSubmitted && !userStatus?.isTestCancelled;
+    } catch (error) {
+      console.error('Error checking if user can take test:', error);
+      return false;
+    }
+  },
+
   async getUserTestStatus(userId: string): Promise<UserTestStatus | null> {
     try {
       // First try to create the document if it doesn't exist
@@ -235,7 +246,7 @@ export const testService = {
     }
   },
 
-  // Sample test questions
+  // Sample test questions - removed correct answers visibility
   getTestQuestions: (): TestQuestion[] => [
     {
       id: '1',
@@ -361,7 +372,13 @@ export const testService = {
 
   async submitTestResult(testResult: Omit<TestResult, 'id'>): Promise<string> {
     try {
-      // Mark test as submitted
+      // Check if user has already submitted
+      const userStatus = await this.getUserTestStatus(testResult.userId);
+      if (userStatus?.hasSubmitted) {
+        throw new Error('Test has already been submitted. Multiple submissions are not allowed.');
+      }
+
+      // Mark test as submitted first
       await this.markTestAsSubmitted(testResult.userId);
       
       const docRef = await addDoc(collection(db, 'testResults'), {
@@ -434,45 +451,7 @@ export const testService = {
       score: correctAnswers,
       percentage
     };
-  },
-
-  getGradeFromPercentage(percentage: number): { grade: string; color: string; message: string } {
-    if (percentage >= 90) {
-      return {
-        grade: 'A+',
-        color: 'text-green-400',
-        message: 'Outstanding Performance!'
-      };
-    } else if (percentage >= 80) {
-      return {
-        grade: 'A',
-        color: 'text-green-400',
-        message: 'Excellent Work!'
-      };
-    } else if (percentage >= 70) {
-      return {
-        grade: 'B+',
-        color: 'text-blue-400',
-        message: 'Good Performance!'
-      };
-    } else if (percentage >= 60) {
-      return {
-        grade: 'B',
-        color: 'text-blue-400',
-        message: 'Satisfactory!'
-      };
-    } else if (percentage >= 50) {
-      return {
-        grade: 'C',
-        color: 'text-yellow-400',
-        message: 'Needs Improvement!'
-      };
-    } else {
-      return {
-        grade: 'F',
-        color: 'text-red-400',
-        message: 'Better Luck Next Time!'
-      };
-    }
   }
+
+  // Removed getGradeFromPercentage function as per requirements
 };

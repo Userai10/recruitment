@@ -78,23 +78,55 @@ export const testService = {
 
   async getUserTestStatus(userId: string): Promise<UserTestStatus | null> {
     try {
-      const statusDoc = await getDoc(doc(db, 'userTestStatus', userId));
+      // First try to create the document if it doesn't exist
+      const statusRef = doc(db, 'userTestStatus', userId);
       
-      if (statusDoc.exists()) {
-        const data = statusDoc.data();
-        return {
-          userId,
-          hasSubmitted: data.hasSubmitted || false,
-          submissionDate: data.submissionDate?.toDate(),
-          tabSwitchCount: data.tabSwitchCount || 0,
-          isTestCancelled: data.isTestCancelled || false,
-          lastActivity: data.lastActivity?.toDate() || new Date()
-        };
+      try {
+        const statusDoc = await getDoc(statusRef);
+        
+        if (statusDoc.exists()) {
+          const data = statusDoc.data();
+          return {
+            userId,
+            hasSubmitted: data.hasSubmitted || false,
+            submissionDate: data.submissionDate?.toDate(),
+            tabSwitchCount: data.tabSwitchCount || 0,
+            isTestCancelled: data.isTestCancelled || false,
+            lastActivity: data.lastActivity?.toDate() || new Date()
+          };
+        } else {
+          // Document doesn't exist, create it with default values
+          const defaultStatus = {
+            userId,
+            hasSubmitted: false,
+            tabSwitchCount: 0,
+            isTestCancelled: false,
+            lastActivity: new Date()
+          };
+          
+          await setDoc(statusRef, defaultStatus);
+          return defaultStatus;
+        }
+      } catch (docError: any) {
+        // If we can't read the document, try to create it
+        if (docError.code === 'permission-denied' || docError.code === 'not-found') {
+          const defaultStatus = {
+            userId,
+            hasSubmitted: false,
+            tabSwitchCount: 0,
+            isTestCancelled: false,
+            lastActivity: new Date()
+          };
+          
+          await setDoc(doc(db, 'userTestStatus', userId), defaultStatus);
+          return defaultStatus;
+        }
+        throw docError;
       }
       
-      return null;
     } catch (error: any) {
-      throw new Error(error.message || 'Failed to get user test status');
+      console.error('Error in getUserTestStatus:', error);
+      throw new Error(`Failed to get user test status: ${error.message}`);
     }
   },
 

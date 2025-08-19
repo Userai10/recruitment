@@ -11,14 +11,12 @@ import {
   setDoc
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-
 export interface TestSettings {
   testStartTime: Date;
   testDuration: number; // in minutes
   maxTabSwitches: number;
   isTestActive: boolean;
 }
-
 export interface TestQuestion {
   id: string;
   question: string;
@@ -26,13 +24,11 @@ export interface TestQuestion {
   correctAnswer: number;
   category: string;
 }
-
 export interface TestAnswer {
   questionId: string;
   selectedAnswer: number;
   isCorrect: boolean;
 }
-
 export interface TestResult {
   id?: string;
   userId: string;
@@ -48,7 +44,6 @@ export interface TestResult {
   completedAt: Date;
   status: 'completed' | 'in-progress' | 'abandoned';
 }
-
 export interface UserTestStatus {
   userId: string;
   hasSubmitted: boolean;
@@ -57,7 +52,6 @@ export interface UserTestStatus {
   isTestCancelled: boolean;
   lastActivity: Date;
 }
-
 export const testService = {
   getTestSettings: (): TestSettings => ({
     testStartTime: new Date('2025-01-19T10:00:00'), // Fixed start time for all users
@@ -65,28 +59,14 @@ export const testService = {
     maxTabSwitches: 2,
     isTestActive: true
   }),
-
   isTestAvailable: (): boolean => {
     const settings = testService.getTestSettings();
     return new Date() >= settings.testStartTime;
   },
-
   getTestEndTime: (): Date => {
     const settings = testService.getTestSettings();
     return new Date(settings.testStartTime.getTime() + settings.testDuration * 60 * 1000);
   },
-
-  // Check if user can take the test (hasn't submitted before)
-  async canUserTakeTest(userId: string): Promise<boolean> {
-    try {
-      const userStatus = await this.getUserTestStatus(userId);
-      return !userStatus?.hasSubmitted && !userStatus?.isTestCancelled;
-    } catch (error) {
-      console.error('Error checking if user can take test:', error);
-      return false;
-    }
-  },
-
   async getUserTestStatus(userId: string): Promise<UserTestStatus | null> {
     try {
       // First try to create the document if it doesn't exist
@@ -120,7 +100,7 @@ export const testService = {
         }
       } catch (docError: any) {
         // If we can't read the document, try to create it
-        if (docError.code === 'permission-denied' || docError.code === 'not-found') {
+        if (docError.code = 'permission-denied' || docError.code = 'not-found') {
           const defaultStatus = {
             userId,
             hasSubmitted: false,
@@ -137,10 +117,9 @@ export const testService = {
       
     } catch (error: any) {
       console.error('Error in getUserTestStatus:', error);
-      throw new Error(`Failed to get user test status: ${error.message}`);
+      throw new Error(Failed to get user test status: ${error.message});
     }
   },
-
   async updateUserTestStatus(userId: string, status: Partial<UserTestStatus>): Promise<void> {
     try {
       const statusRef = doc(db, 'userTestStatus', userId);
@@ -164,7 +143,6 @@ export const testService = {
       }
     }
   },
-
   async markTestAsSubmitted(userId: string): Promise<void> {
     try {
       const statusRef = doc(db, 'userTestStatus', userId);
@@ -190,7 +168,6 @@ export const testService = {
       throw new Error(error.message || 'Failed to mark test as submitted');
     }
   },
-
   async incrementTabSwitchCount(userId: string): Promise<number> {
     try {
       const statusRef = doc(db, 'userTestStatus', userId);
@@ -221,7 +198,6 @@ export const testService = {
       throw new Error(error.message || 'Failed to increment tab switch count');
     }
   },
-
   async cancelTest(userId: string): Promise<void> {
     try {
       const statusRef = doc(db, 'userTestStatus', userId);
@@ -245,8 +221,7 @@ export const testService = {
       throw new Error(error.message || 'Failed to cancel test');
     }
   },
-
-  // Sample test questions - removed correct answers visibility
+  // Sample test questions
   getTestQuestions: (): TestQuestion[] => [
     {
       id: '1',
@@ -369,16 +344,9 @@ export const testService = {
       category: 'Technical'
     }
   ],
-
   async submitTestResult(testResult: Omit<TestResult, 'id'>): Promise<string> {
     try {
-      // Check if user has already submitted
-      const userStatus = await this.getUserTestStatus(testResult.userId);
-      if (userStatus?.hasSubmitted) {
-        throw new Error('Test has already been submitted. Multiple submissions are not allowed.');
-      }
-
-      // Mark test as submitted first
+      // Mark test as submitted
       await this.markTestAsSubmitted(testResult.userId);
       
       const docRef = await addDoc(collection(db, 'testResults'), {
@@ -390,7 +358,6 @@ export const testService = {
       throw new Error(error.message || 'Failed to submit test result');
     }
   },
-
   async getUserTestResults(userId: string): Promise<TestResult[]> {
     try {
       const q = query(
@@ -418,7 +385,6 @@ export const testService = {
       throw new Error(error.message || 'Failed to get test results');
     }
   },
-
   async getAllTestResults(): Promise<TestResult[]> {
     try {
       const q = query(
@@ -441,7 +407,6 @@ export const testService = {
       throw new Error(error.message || 'Failed to get all test results');
     }
   },
-
   calculateScore(answers: TestAnswer[]): { score: number; percentage: number } {
     const correctAnswers = answers.filter(answer => answer.isCorrect).length;
     const totalQuestions = answers.length;
@@ -451,7 +416,44 @@ export const testService = {
       score: correctAnswers,
       percentage
     };
+  },
+  getGradeFromPercentage(percentage: number): { grade: string; color: string; message: string } {
+    if (percentage >= 90) {
+      return {
+        grade: 'A+',
+        color: 'text-green-400',
+        message: 'Outstanding Performance!'
+      };
+    } else if (percentage >= 80) {
+      return {
+        grade: 'A',
+        color: 'text-green-400',
+        message: 'Excellent Work!'
+      };
+    } else if (percentage >= 70) {
+      return {
+        grade: 'B+',
+        color: 'text-blue-400',
+        message: 'Good Performance!'
+      };
+    } else if (percentage >= 60) {
+      return {
+        grade: 'B',
+        color: 'text-blue-400',
+        message: 'Satisfactory!'
+      };
+    } else if (percentage >= 50) {
+      return {
+        grade: 'C',
+        color: 'text-yellow-400',
+        message: 'Needs Improvement!'
+      };
+    } else {
+      return {
+        grade: 'F',
+        color: 'text-red-400',
+        message: 'Better Luck Next Time!'
+      };
+    }
   }
-
-  // Removed getGradeFromPercentage function as per requirements
 };

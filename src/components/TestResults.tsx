@@ -72,7 +72,7 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
             </div>
             
             <button
-              onClick={onBackToPortal}
+              onClick={handleLogout}
               className="flex items-center space-x-2 px-3 sm:px-4 py-2 bg-red-600 bg-opacity-20 border border-red-500/30 rounded-lg text-red-400 hover:bg-red-600 hover:bg-opacity-30 transition-all duration-300 text-sm sm:text-base w-full sm:w-auto justify-center"
             >
               <LogOut className="w-4 h-4" />

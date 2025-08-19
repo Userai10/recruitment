@@ -377,7 +377,7 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
                   ? 'Test Not Available'
                   : timeUntilEnd <= 0 
                   ? 'Test Ended' 
-                  : 'Start Test Now'
+                  : 'Start Test (All Users Start Together)'
                 }
               </span>
             </button>

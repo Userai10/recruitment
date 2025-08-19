@@ -378,8 +378,7 @@ export const testService = {
     try {
       const q = query(
         collection(db, 'testResults'),
-        where('userId', '==', userId),
-        orderBy('completedAt', 'desc')
+        where('userId', '==', userId)
       );
       
       const querySnapshot = await getDocs(q);
@@ -392,7 +391,12 @@ export const testService = {
         } as TestResult);
       });
       
-      return results;
+      // Sort results by completedAt in descending order on client side
+      return results.sort((a, b) => {
+        const dateA = a.completedAt instanceof Date ? a.completedAt : a.completedAt.toDate();
+        const dateB = b.completedAt instanceof Date ? b.completedAt : b.completedAt.toDate();
+        return dateB.getTime() - dateA.getTime();
+      });
     } catch (error: any) {
       throw new Error(error.message || 'Failed to get test results');
     }

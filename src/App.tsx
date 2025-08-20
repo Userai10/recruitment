@@ -215,7 +215,7 @@ function App() {
           <div className="text-center mb-6 sm:mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full mb-4">
               <img
-  src="https://drive.google.com/file/d/1WrR2eQZpVA_pzRnELO7qS3Uqn4KOcisb/view?usp=drivesdk"  // replace with your image URL or path
+  src="https://istetiet.com/assets/logo-CN11VS0g.png"  // replace with your image URL or path
   alt="Graduation Cap"
   className="w-8 h-8"            // same width and height as before
   style={{ filter: 'brightness(0) invert(1)' }} // optional: to make the image white like text-white

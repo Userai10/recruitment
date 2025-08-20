@@ -100,7 +100,7 @@ export const testService = {
         }
       } catch (docError: any) {
         // If we can't read the document, try to create it
-        if (docError.code = 'permission-denied' || docError.code = 'not-found') {
+        if (docError.code === 'permission-denied' || docError.code === 'not-found') {
           const defaultStatus = {
             userId,
             hasSubmitted: false,

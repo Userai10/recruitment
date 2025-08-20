@@ -217,10 +217,10 @@ function App() {
               <GraduationCap className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-              {isLogin ? 'Welcome Back' : 'Join Our Society'}
+              {isLogin ? 'Welcome Back' : 'Join ISTE'}
             </h1>
             <p className="text-gray-300 text-xs sm:text-sm">
-              {isLogin ? 'Sign in to your recruitment portal' : 'Create your recruitment account'}
+              {isLogin ? 'Sign in' : 'Create your account'}
             </p>
           </div>
 

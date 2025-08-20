@@ -101,9 +101,8 @@ const TestInterface: React.FC<TestInterfaceProps> = ({ user, userProfile, onTest
 
   // Auto-submit when time runs out
   useEffect(() => {
-    if (timeLeft <= 0 && !isSubmitting && !isTestCancelled) {
+    if (timeLeft <= 0 && timeLeft !== 0 && !isSubmitting && !isTestCancelled) {
       handleSubmitTest();
-    } else {
     }
   }, [timeLeft, isSubmitting, isTestCancelled]);
 

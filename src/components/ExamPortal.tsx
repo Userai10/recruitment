@@ -171,6 +171,7 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
         userProfile={userProfile}
         currentResult={testResult}
         onBackToPortal={handleBackToPortal}
+        onLogout={handleLogout}
       />
     );
   }

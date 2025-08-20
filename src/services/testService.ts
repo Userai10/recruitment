@@ -117,7 +117,7 @@ export const testService = {
       
     } catch (error: any) {
       console.error('Error in getUserTestStatus:', error);
-      throw new Error(Failed to get user test status: ${error.message});
+      throw new Error(`Failed to get user test status: ${error.message}`);
     }
   },
   async updateUserTestStatus(userId: string, status: Partial<UserTestStatus>): Promise<void> {

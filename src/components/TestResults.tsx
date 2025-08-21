@@ -127,7 +127,7 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
             </div>
 
             {/* Grade */}
-            <div className="text-center">
+{/*             <div className="text-center">
               <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
                 <Award className="w-6 sm:w-8 h-6 sm:h-8 text-white" />
               </div>
@@ -135,7 +135,7 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
                 {gradeInfo.grade}
               </h3>
               <p className="text-gray-400 text-xs sm:text-sm">Grade Achieved</p>
-            </div>
+            </div> */}
 
             {/* Time */}
             <div className="text-center">
@@ -161,7 +161,7 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
         </div>
 
         {/* Detailed Results */}
-        {showDetailedResults && (
+{/*         {showDetailedResults && (
           <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 animate-slide-up">
             <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center space-x-3">
               <BarChart3 className="w-6 h-6 text-purple-400" />
@@ -226,9 +226,9 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
             </div>
           </div>
         )}
-
+ */}
         {/* Previous Results */}
-        {!loading && allResults.length > 1 && (
+{/*         {!loading && allResults.length > 1 && (
           <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-4 sm:p-6 lg:p-8 animate-slide-up">
             <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center space-x-3">
               <RotateCcw className="w-6 h-6 text-purple-400" />
@@ -274,7 +274,7 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
             </div>
           </div>
         )}
-      </main>
+      </main> */}
 
       <style jsx>{`
         @keyframes fade-in {

@@ -161,7 +161,7 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
         </div>
 
         {/* Detailed Results */}
-{/*         {showDetailedResults && (
+        {showDetailedResults && (
           <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 animate-slide-up">
             <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center space-x-3">
               <BarChart3 className="w-6 h-6 text-purple-400" />
@@ -226,9 +226,9 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
             </div>
           </div>
         )}
- */}
+
         {/* Previous Results */}
-{/*         {!loading && allResults.length > 1 && (
+        {!loading && allResults.length > 1 && (
           <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-4 sm:p-6 lg:p-8 animate-slide-up">
             <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center space-x-3">
               <RotateCcw className="w-6 h-6 text-purple-400" />
@@ -274,7 +274,7 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
             </div>
           </div>
         )}
-      </main> */}
+      </main>
 
       <style jsx>{`
         @keyframes fade-in {

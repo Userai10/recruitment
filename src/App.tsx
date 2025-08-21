@@ -213,7 +213,7 @@ function App() {
         <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl shadow-2xl border border-purple-500/20 p-6 sm:p-8 mx-4 sm:mx-0">
           {/* Header */}
           <div className="text-center mb-6 sm:mb-8">
-{/*             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full mb-4"> */}
+            <div className="inline-flex items-center justify-center w-16 h-16  mb-4">
               <img
   src="https://istetiet.com/assets/logo-CN11VS0g.png"  // replace with your image URL or path
   alt="Graduation Cap"
@@ -221,7 +221,7 @@ function App() {
   style={{ filter: 'brightness(0) invert(1)' }} // optional: to make the image white like text-white
 />
 
-{/*             </div> */}
+            </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
               {isLogin ? 'Welcome Back' : 'Join ISTE'}
             </h1>

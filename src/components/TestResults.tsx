@@ -50,20 +50,20 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
   const questions = testService.getTestQuestions();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-600 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-600 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
         <div className="absolute top-3/4 right-1/4 w-72 h-72 bg-blue-600 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-1000"></div>
-        <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-indigo-600 rounded-full mix-blend-multiply filter blur-xl opacity-5 animate-pulse delay-2000"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-cyan-600 rounded-full mix-blend-multiply filter blur-xl opacity-5 animate-pulse delay-2000"></div>
       </div>
 
       {/* Header */}
-      <header className="relative z-10 bg-black bg-opacity-40 backdrop-blur-xl border-b border-purple-500/20">
+      <header className="relative z-10 bg-black bg-opacity-40 backdrop-blur-xl border-b border-blue-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 space-y-3 sm:space-y-0">
             <div className="flex items-center space-x-3 sm:space-x-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center">
                 <Trophy className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -114,7 +114,7 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
               href="https://istetiet.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center space-x-3 px-8 sm:px-12 py-4 sm:py-5 bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 text-white font-bold text-lg sm:text-xl rounded-2xl hover:from-purple-700 hover:via-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-purple-500/25 animate-bounce"
+              className="inline-flex items-center space-x-3 px-8 sm:px-12 py-4 sm:py-5 bg-gradient-to-r from-blue-600 via-cyan-600 to-sky-600 text-white font-bold text-lg sm:text-xl rounded-2xl hover:from-blue-700 hover:via-cyan-700 hover:to-sky-700 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-blue-500/25 animate-bounce"
             >
               <span>Continue to ISTE Website</span>
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

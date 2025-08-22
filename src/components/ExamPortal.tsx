@@ -189,21 +189,21 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
 
   // Show exam portal (default view)
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black relative overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-600 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-600 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
         <div className="absolute top-3/4 right-1/4 w-72 h-72 bg-blue-600 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-1000"></div>
-        <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-indigo-600 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-2000"></div>
-        <div className="absolute top-1/2 right-1/2 w-96 h-96 bg-violet-600 rounded-full mix-blend-multiply filter blur-xl opacity-5 animate-pulse delay-3000"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-cyan-600 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-2000"></div>
+        <div className="absolute top-1/2 right-1/2 w-96 h-96 bg-sky-600 rounded-full mix-blend-multiply filter blur-xl opacity-5 animate-pulse delay-3000"></div>
       </div>
 
       {/* Header */}
-      <header className="relative z-10 bg-black bg-opacity-40 backdrop-blur-xl border-b border-purple-500/20">
+      <header className="relative z-10 bg-black bg-opacity-40 backdrop-blur-xl border-b border-blue-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 space-y-3 sm:space-y-0">
             <div className="flex items-center space-x-3 sm:space-x-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center">
                 <Award className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -236,7 +236,7 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
           <div className="text-center space-y-4 animate-fade-in">
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
               Welcome to the
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mt-2">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mt-2">
                 Recruitment Test
               </span>
             </h2>
@@ -247,16 +247,16 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
 
           {/* Timer Section */}
           <div className="flex justify-center">
-            <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-6 sm:p-8 text-center w-full max-w-md">
+            <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-blue-500/20 p-6 sm:p-8 text-center w-full max-w-md">
               <div className="flex items-center justify-center space-x-3 mb-4">
-                <Clock className="w-6 sm:w-8 h-6 sm:h-8 text-purple-400" />
+                <Clock className="w-6 sm:w-8 h-6 sm:h-8 text-blue-400" />
                 <h3 className="text-lg sm:text-2xl font-bold text-white">
                   {!isTestAvailable ? 'Test Starts In' : timeUntilEnd > 0 ? 'Test Ends In' : 'Test Ended'}
                 </h3>
               </div>
               <div className={`text-4xl sm:text-5xl md:text-6xl font-mono font-bold text-transparent bg-clip-text mb-4 ${
                 (!isTestAvailable || timeUntilEnd > 0)
-                  ? 'bg-gradient-to-r from-purple-400 to-blue-400' 
+                  ? 'bg-gradient-to-r from-blue-400 to-cyan-400' 
                   : 'bg-gradient-to-r from-red-400 to-red-600'
               }`}>
                 {!isTestAvailable ? formatTime(timeUntilStart) : formatTime(timeUntilEnd)}
@@ -291,52 +291,52 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
 
           {/* Instructions Section */}
           {showInstructions && (
-            <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-6 sm:p-8 animate-slide-up">
+            <div className="bg-black bg-opacity-40 backdrop-blur-xl rounded-2xl border border-blue-500/20 p-6 sm:p-8 animate-slide-up">
               <div className="flex items-center space-x-3 mb-6">
-                <FileText className="w-6 h-6 text-purple-400" />
+                <FileText className="w-6 h-6 text-blue-400" />
                 <h3 className="text-xl sm:text-2xl font-bold text-white">Test Instructions</h3>
               </div>
               
               <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                 <div className="space-y-4">
-                  <h4 className="text-base sm:text-lg font-semibold text-purple-300">General Guidelines</h4>
+                  <h4 className="text-base sm:text-lg font-semibold text-blue-300">General Guidelines</h4>
                   <ul className="space-y-3 text-sm sm:text-base text-gray-300">
                     <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
                       <span>The test duration is 60 minutes with 10 multiple-choice questions</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
                       <span>Each question carries equal marks with no negative marking</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
                       <span>You can navigate between questions and change answers</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
                       <span>Auto-submit will occur when time expires</span>
                     </li>
                   </ul>
                 </div>
                 
                 <div className="space-y-4">
-                  <h4 className="text-base sm:text-lg font-semibold text-purple-300">Technical Requirements</h4>
+                  <h4 className="text-base sm:text-lg font-semibold text-blue-300">Technical Requirements</h4>
                   <ul className="space-y-3 text-sm sm:text-base text-gray-300">
                     <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
                       <span>Ensure stable internet connection throughout the test</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
                       <span>Do not refresh the page or use browser back button</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
                       <span>Close all other applications and browser tabs</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
                       <span>Use a desktop or laptop for the best experience</span>
                     </li>
                   </ul>
@@ -365,7 +365,7 @@ const ExamPortal: React.FC<ExamPortalProps> = ({ user, userProfile, onLogout }) 
               className={`flex items-center space-x-3 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-300 w-full max-w-xs sm:max-w-none sm:w-auto ${
                 !isTestAvailable || timeUntilEnd <= 0 || userTestStatus?.hasSubmitted || userTestStatus?.isTestCancelled
                   ? 'bg-gray-600 bg-opacity-50 text-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 hover:scale-105 shadow-lg hover:shadow-purple-500/25'
+                  : 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 hover:scale-105 shadow-lg hover:shadow-blue-500/25'
               }`}
             >
               <Play className="w-5 sm:w-6 h-5 sm:h-6" />

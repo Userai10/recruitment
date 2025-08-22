@@ -74,7 +74,7 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
             
             <button
               onClick={onLogout}
-              className="flex items-center space-x-2 px-3 sm:px-4 py-2 bg-red-600 bg-opacity-20 border border-red-500/30 rounded-lg text-red-400 hover:bg-red-600 hover:bg-opacity-30 transition-all duration-300 text-sm sm:text-base w-full sm:w-auto justify-center"
+              className="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-gray-700 bg-opacity-50 border border-gray-600 rounded-lg text-gray-300 hover:bg-gray-600 hover:border-gray-500 transition-all duration-300 text-sm sm:text-base w-full sm:w-auto justify-center"
             >
               <LogOut className="w-4 h-4" />
               <span>Logout</span>
@@ -87,17 +87,44 @@ const TestResults: React.FC<TestResultsProps> = ({ user, userProfile, currentRes
       <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Congratulations Section */}
         <div className="text-center mb-8 animate-fade-in">
-          <div className="inline-flex items-center justify-center w-16 sm:w-20 h-16 sm:h-20 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full mb-4 sm:mb-6">
-            <Trophy className="w-8 sm:w-10 h-8 sm:h-10 text-white" />
+          <div className="inline-flex items-center justify-center w-20 sm:w-24 h-20 sm:h-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mb-6 sm:mb-8 animate-pulse">
+            <CheckCircle className="w-10 sm:w-12 h-10 sm:h-12 text-white" />
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-            Test Completed!
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400 mb-6">
+            🎉 Test Submitted Successfully! 🎉
           </h2>
-          <p className="text-lg sm:text-xl text-gray-300 mb-2 px-4">
-            Congratulations, {userProfile.name}
+          <p className="text-xl sm:text-2xl text-white mb-4 px-4 font-semibold">
+            Congratulations, {userProfile.name}!
           </p>
-          <p className="text-base sm:text-lg text-gray-400 px-4">
-            {gradeInfo.message}
+          <p className="text-lg sm:text-xl text-gray-300 mb-6 px-4">
+            Your test has been submitted and recorded successfully.
+          </p>
+          <div className="bg-green-500 bg-opacity-20 border border-green-500/30 rounded-xl p-4 sm:p-6 max-w-2xl mx-auto mb-8">
+            <p className="text-green-300 text-base sm:text-lg font-medium">
+              ✅ Your responses have been saved securely
+            </p>
+            <p className="text-green-400 text-sm sm:text-base mt-2">
+              Results will be processed and communicated to you soon
+            </p>
+          </div>
+          
+          {/* Continue Button */}
+          <div className="mb-8">
+            <a
+              href="https://istetiet.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-3 px-8 sm:px-12 py-4 sm:py-5 bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 text-white font-bold text-lg sm:text-xl rounded-2xl hover:from-purple-700 hover:via-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-purple-500/25 animate-bounce"
+            >
+              <span>Continue to ISTE Website</span>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </a>
+          </div>
+          
+          <p className="text-sm sm:text-base text-gray-400 px-4 max-w-xl mx-auto">
+            Thank you for participating in the ISTE recruitment process. We appreciate your time and effort!
           </p>
         </div>
 

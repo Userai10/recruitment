@@ -312,18 +312,13 @@ function App() {
               <div className="transition-all duration-300 ease-in-out">
                 <div className="relative">
                   <GraduationCap className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 w-5 h-5" />
-                  <select
+                  <input
+                    type="text"
+                    placeholder="Branch (e.g., Computer Science Engineering)"
                     value={formData.branch}
                     onChange={(e) => handleInputChange('branch', e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 appearance-none text-sm sm:text-base"
-                  >
-                    <option value="">Select Branch</option>
-                    {branches.map((branch) => (
-                      <option key={branch} value={branch} className="bg-gray-800">
-                        {branch}
-                      </option>
-                    ))}
-                  </select>
+                    className="w-full pl-12 pr-4 py-3 bg-gray-800 bg-opacity-50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
+                  />
                 </div>
                 {errors.branch && <p className="text-red-400 text-xs sm:text-sm mt-1">{errors.branch}</p>}
               </div>
